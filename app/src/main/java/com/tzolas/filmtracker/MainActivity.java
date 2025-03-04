@@ -1,24 +1,48 @@
 package com.tzolas.filmtracker;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
+import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.tzolas.filmtracker.adapters.MovieAdapter;
+import com.tzolas.filmtracker.database.MovieDatabase;
+import com.tzolas.filmtracker.entities.Movie;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private RecyclerView recyclerView;
+    private MovieAdapter movieAdapter;
+    private MovieDatabase movieDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        movieDatabase = MovieDatabase.getInstance(this);
+        loadMovies();
+
+        findViewById(R.id.btnAddMovie).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, AddMovieActivity.class));
+            }
         });
+    }
+
+    private void loadMovies() {
+        new Thread(() -> {
+            List<Movie> movieList = movieDatabase.movieDao().getAllMovies();
+            runOnUiThread(() -> {
+                movieAdapter = new MovieAdapter(movieList, MainActivity.this);
+                recyclerView.setAdapter(movieAdapter);
+            });
+        }).start();
     }
 }
