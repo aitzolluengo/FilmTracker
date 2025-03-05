@@ -1,12 +1,14 @@
 package com.tzolas.filmtracker.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.tzolas.filmtracker.MovieDetailActivity;
 import com.tzolas.filmtracker.R;
 import com.tzolas.filmtracker.entities.Movie;
 import java.util.List;
@@ -14,25 +16,11 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
 
     private List<Movie> movieList;
-    private Context context;
-    private final OnMovieClickListener movieClickListener;
-    private final OnMovieDeleteListener movieDeleteListener;
+    private final Context context;
 
-    public interface OnMovieClickListener {
-        void onMovieClick(Movie movie);
-    }
-
-    public interface OnMovieDeleteListener {
-        void onMovieDelete(Movie movie);
-    }
-
-    public MovieAdapter(List<Movie> movieList, Context context,
-                        OnMovieClickListener movieClickListener,
-                        OnMovieDeleteListener movieDeleteListener) {
+    public MovieAdapter(List<Movie> movieList, Context context) {
         this.movieList = movieList;
         this.context = context;
-        this.movieClickListener = movieClickListener;
-        this.movieDeleteListener = movieDeleteListener;
     }
 
     @NonNull
@@ -50,10 +38,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
         holder.year.setText(String.valueOf(movie.getYear()));
         holder.rating.setText(String.valueOf(movie.getRating()));
 
-        holder.itemView.setOnClickListener(v -> movieClickListener.onMovieClick(movie));
-        holder.itemView.setOnLongClickListener(v -> {
-            movieDeleteListener.onMovieDelete(movie);
-            return true;
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, MovieDetailActivity.class);
+            intent.putExtra("MOVIE_ID", movie.getId());
+            context.startActivity(intent);
         });
     }
 
@@ -65,6 +53,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHol
     public void updateMovies(List<Movie> newMovies) {
         this.movieList = newMovies;
         notifyDataSetChanged();
+    }
+
+    public void removeMovie(int position) {
+        movieList.remove(position);
+        notifyItemRemoved(position);
     }
 
     public static class MovieViewHolder extends RecyclerView.ViewHolder {

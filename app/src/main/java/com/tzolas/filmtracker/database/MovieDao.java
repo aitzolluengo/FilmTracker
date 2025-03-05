@@ -32,4 +32,8 @@ public interface MovieDao {
     // Buscar películas por título
     @Query("SELECT * FROM movies WHERE title LIKE :query ORDER BY title ASC")
     List<Movie> searchMovies(String query);
+
+    @Query("SELECT * FROM movies WHERE id = :movieId LIMIT 1")
+    Movie getMovieById(int movieId);
+
 }

@@ -3,37 +3,47 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="10dp"
-    android:background="@android:color/white">
+    android:padding="12dp"
+    android:background="@color/secondary"
+    android:layout_margin="8dp"
+    android:elevation="4dp"
+    android:cornerRadius="12dp">
 
     <TextView
         android:id="@+id/movieTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black"/>
+        android:textColor="@color/text_primary"
+        android:paddingBottom="6dp"
+        android:fontFamily="sans-serif-medium"/>
 
     <TextView
         android:id="@+id/movieGenre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"/>
+        android:textSize="16sp"
+        android:textColor="@color/text_secondary"
+        android:paddingBottom="4dp"
+        android:fontFamily="sans-serif-light"/>
 
     <TextView
         android:id="@+id/movieYear"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"/>
+        android:textColor="@color/text_secondary"
+        android:paddingBottom="4dp"
+        android:fontFamily="sans-serif-light"/>
 
     <TextView
         android:id="@+id/movieRating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@android:color/holo_blue_dark"/>
-
+        android:textColor="@color/accent"
+        android:paddingTop="6dp"
+        android:fontFamily="sans-serif-medium"/>
 </LinearLayout>

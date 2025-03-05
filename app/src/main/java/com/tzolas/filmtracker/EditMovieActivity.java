@@ -1,5 +1,6 @@
 package com.tzolas.filmtracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +12,7 @@ import com.tzolas.filmtracker.entities.Movie;
 
 public class EditMovieActivity extends AppCompatActivity {
 
+    // UI Components
     private EditText titleInput, directorInput, yearInput, genreInput, ratingInput;
     private Button saveButton;
     private MovieDatabase movieDatabase;
@@ -29,6 +31,7 @@ public class EditMovieActivity extends AppCompatActivity {
         ratingInput = findViewById(R.id.inputRating);
         saveButton = findViewById(R.id.btnSaveMovie);
 
+        // Obtener instancia de la base de datos
         movieDatabase = MovieDatabase.getInstance(this);
 
         // Obtener el ID de la película desde el intent
@@ -70,6 +73,7 @@ public class EditMovieActivity extends AppCompatActivity {
         String genre = genreInput.getText().toString().trim();
         String ratingStr = ratingInput.getText().toString().trim();
 
+        // Validar que todos los campos están completos
         if (title.isEmpty() || director.isEmpty() || yearStr.isEmpty() || genre.isEmpty() || ratingStr.isEmpty()) {
             Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show();
             return;
@@ -84,6 +88,7 @@ public class EditMovieActivity extends AppCompatActivity {
             movieDatabase.movieDao().updateMovie(updatedMovie);
             runOnUiThread(() -> {
                 Toast.makeText(this, "Película actualizada", Toast.LENGTH_SHORT).show();
+                setResult(RESULT_OK); // Notificar que se realizó una actualización
                 finish(); // Cerrar la actividad
             });
         }).start();
