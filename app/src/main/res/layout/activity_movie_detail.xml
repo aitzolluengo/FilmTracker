@@ -3,7 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="@color/primary">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Detalles de la Película"
+        style="@style/TitleText"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/secondary"
+        android:layout_marginBottom="10dp"/>
 
     <TextView
         android:id="@+id/detailTitle"
@@ -11,35 +24,55 @@
         android:layout_height="wrap_content"
         android:textSize="22sp"
         android:textStyle="bold"
-        android:textColor="@android:color/black"/>
+        android:padding="12dp"
+        android:textColor="@color/text_primary"/>
 
     <TextView
         android:id="@+id/detailDirector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:textColor="@android:color/darker_gray"/>
+        android:padding="8dp"
+        android:textColor="@color/text_secondary"/>
 
     <TextView
         android:id="@+id/detailYear"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"/>
+        android:padding="8dp"
+        android:textColor="@color/text_secondary"/>
 
     <TextView
         android:id="@+id/detailGenre"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
-        android:textColor="@android:color/darker_gray"/>
+        android:padding="8dp"
+        android:textColor="@color/text_secondary"/>
 
     <TextView
         android:id="@+id/detailRating"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@android:color/holo_blue_dark"/>
+        android:padding="10dp"
+        android:textColor="@color/accent"/>
 
+    <Button
+        android:id="@+id/btnEditMovie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Editar Película"
+        style="@style/PrimaryButton"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:id="@+id/btnDeleteMovie"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Eliminar Película"
+        style="@style/DangerButton"
+        android:layout_marginTop="10dp"/>
 </LinearLayout>

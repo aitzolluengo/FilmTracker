@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Añadir Nueva Película"
+        android:text="Editar Película"
         style="@style/TitleText"/>
 
     <View
@@ -23,14 +23,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Título"
-        style="@style/EditTextStyle"/>
+        style="@style/EditTextStyle"
+        android:backgroundTint="@color/secondary"/>
 
     <EditText
         android:id="@+id/inputDirector"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Director"
-        style="@style/EditTextStyle"/>
+        style="@style/EditTextStyle"
+        android:backgroundTint="@color/secondary"/>
 
     <EditText
         android:id="@+id/inputYear"
@@ -38,14 +40,16 @@
         android:layout_height="wrap_content"
         android:hint="Año"
         android:inputType="number"
-        style="@style/EditTextStyle"/>
+        style="@style/EditTextStyle"
+        android:backgroundTint="@color/secondary"/>
 
     <EditText
         android:id="@+id/inputGenre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Género"
-        style="@style/EditTextStyle"/>
+        style="@style/EditTextStyle"
+        android:backgroundTint="@color/secondary"/>
 
     <EditText
         android:id="@+id/inputRating"
@@ -53,13 +57,14 @@
         android:layout_height="wrap_content"
         android:hint="Valoración (0-10)"
         android:inputType="numberDecimal"
-        style="@style/EditTextStyle"/>
+        style="@style/EditTextStyle"
+        android:backgroundTint="@color/secondary"/>
 
     <Button
         android:id="@+id/btnSaveMovie"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Guardar Película"
+        android:text="Guardar Cambios"
         style="@style/PrimaryButton"
         android:layout_marginTop="20dp"/>
 </LinearLayout>

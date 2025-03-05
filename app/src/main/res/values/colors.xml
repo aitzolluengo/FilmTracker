@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Paleta de colores inspirada en Letterboxd -->
+    <color name="primary">#181818</color> <!-- Fondo oscuro -->
+    <color name="secondary">#1c1c1c</color> <!-- Fondo de tarjetas -->
+    <color name="accent">#00A8E1</color> <!-- Azul vibrante para destacar -->
+    <color name="text_primary">#FFFFFF</color> <!-- Texto principal en blanco -->
+    <color name="text_secondary">#B0B0B0</color> <!-- Texto secundario en gris -->
+    <color name="error">#D32F2F</color> <!-- Rojo para errores -->
 </resources>

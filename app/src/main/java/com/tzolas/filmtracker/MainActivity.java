@@ -46,21 +46,30 @@ public class MainActivity extends AppCompatActivity {
             List<Movie> movieList = movieDatabase.movieDao().getAllMovies(); // Obtener todas las películas de la BD
             runOnUiThread(() -> {
                 if (movieAdapter == null) {
-                    movieAdapter = new MovieAdapter(movieList, MainActivity.this, this::onMovieClick, this::deleteMovie);
-                    recyclerView.setAdapter(movieAdapter); // Configurar adaptador si aún no está inicializado
+                    // Inicializar adaptador si aún no está creado
+                    movieAdapter = new MovieAdapter(movieList, MainActivity.this, this::onMovieClick, this::deleteMovie, this::editMovie);
+                    recyclerView.setAdapter(movieAdapter);
                 } else {
-                    movieAdapter.updateMovies(movieList); // Actualizar lista de películas si el adaptador ya existe
+                    // Actualizar lista de películas si el adaptador ya existe
+                    movieAdapter.updateMovies(movieList);
                 }
             });
         }).start();
     }
 
-    // Método para eliminar una película de la base de datos
+    // Método para eliminar una película de la base de datos con confirmación
     public void deleteMovie(Movie movie) {
-        new Thread(() -> {
-            movieDatabase.movieDao().deleteMovie(movie); // Eliminar la película de la BD
-            runOnUiThread(this::loadMovies); // Recargar la lista en la UI
-        }).start();
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Eliminar Película")
+                .setMessage("¿Estás seguro de que quieres eliminar esta película?")
+                .setPositiveButton("Sí", (dialog, which) -> {
+                    new Thread(() -> {
+                        movieDatabase.movieDao().deleteMovie(movie);
+                        runOnUiThread(this::loadMovies);
+                    }).start();
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
     // Método para añadir una película a la base de datos
@@ -71,20 +80,20 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-    // Método para actualizar una película en la base de datos
-    public void updateMovie(Movie movie) {
-        new Thread(() -> {
-            movieDatabase.movieDao().updateMovie(movie); // Actualizar la película en la BD
-            runOnUiThread(this::loadMovies); // Recargar la lista en la UI
-        }).start();
+    // Método para actualizar una película en la base de datos (redirige a EditMovieActivity)
+    public void editMovie(Movie movie) {
+        Intent intent = new Intent(this, EditMovieActivity.class);
+        intent.putExtra("MOVIE_ID", movie.getId());
+        startActivity(intent);
     }
 
-    // Método para manejar clics en los elementos de la lista
+    // Método para manejar clics en los elementos de la lista (redirige a MovieDetailActivity)
     public void onMovieClick(Movie movie) {
         Intent intent = new Intent(this, MovieDetailActivity.class);
         intent.putExtra("MOVIE_ID", movie.getId()); // Pasar el ID de la película
         startActivity(intent);
     }
+
     // Método para buscar películas en la base de datos por título
     public void searchMovies(String query) {
         new Thread(() -> {
@@ -102,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         loadMovies(); // Recargar películas cuando se vuelve a la pantalla principal
     }
+
     // Agregar barra de búsqueda en el menú
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
