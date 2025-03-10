@@ -87,6 +87,7 @@
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/main_menu"/>
     <!-- Para que se deslice desde la izquierda -->
-    >
+
+
 
 </androidx.drawerlayout.widget.DrawerLayout>

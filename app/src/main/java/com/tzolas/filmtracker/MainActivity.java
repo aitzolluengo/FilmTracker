@@ -26,6 +26,13 @@ import com.tzolas.filmtracker.adapters.MovieAdapter;
 import com.tzolas.filmtracker.database.MovieDatabase;
 import com.tzolas.filmtracker.entities.Movie;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -48,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        movieList = loadMoviesFromFile();
 
         // Configuración del RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
@@ -209,4 +218,57 @@ public class MainActivity extends AppCompatActivity {
         Collections.sort(movieList, Comparator.comparingInt(Movie::getYear));
         movieAdapter.updateMovies(movieList);
     }
+    public void saveMoviesToFile(List<Movie> movieList) {
+        try {
+            FileOutputStream fos = openFileOutput("movies_list.txt", MODE_PRIVATE);
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
+
+            // Guardar los datos de las películas (título, director, año, etc.)
+            for (Movie movie : movieList) {
+                String movieData = movie.getTitle() + "," + movie.getDirector() + "," + movie.getGenre() + "," + movie.getYear() + "," + movie.getRating();
+                writer.write(movieData);
+                writer.newLine();
+            }
+
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public List<Movie> loadMoviesFromFile() {
+        List<Movie> movies = new ArrayList<>();
+        try {
+            FileInputStream fis = openFileInput("movies_list.txt");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                String[] movieData = line.split(",");
+                String title = movieData[0];
+                String director = movieData[1];
+                String genre = movieData[2];
+                int year = Integer.parseInt(movieData[2]);
+                float rating = Float.parseFloat(movieData[3]);
+
+                Movie movie = new Movie(title, director,genre,year,rating);
+                movies.add(movie);
+            }
+
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return movies;
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveMoviesToFile(movieList); // Guarda las películas cuando la aplicación se detiene
+    }
+
+
+
+
 }
