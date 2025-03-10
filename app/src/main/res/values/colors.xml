@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Paleta de colores inspirada en Letterboxd -->
+    <!-- Paleta de colores -->
     <color name="primary">#181818</color> <!-- Fondo oscuro -->
     <color name="secondary">#1c1c1c</color> <!-- Fondo de tarjetas -->
     <color name="accent">#00A8E1</color> <!-- Azul vibrante para destacar -->
@@ -9,7 +9,7 @@
     <color name="error">#D32F2F</color> <!-- Rojo para errores -->
     <color name="white">#FFFFFF</color>
     <color name="background">#F5F5F5</color> <!-- Color gris claro -->
-
+    <color name="nav_header_bg">#3F51B5</color> <!-- Azul oscuro -->
     <!-- Color oscuro para texto -->
 
 </resources>
