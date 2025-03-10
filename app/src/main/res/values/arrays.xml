@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Lista de géneros -->
+    <string-array name="genre_list">
+        <item>Todos</item>
+        <item>Acción</item>
+        <item>Aventura</item>
+        <item>Ciencia Ficción</item>
+        <item>Comedia</item>
+        <item>Crimen</item>
+        <item>Drama</item>
+        <item>Fantasía</item>
+        <item>Historia</item>
+        <item>Horror</item>
+        <item>Misterio</item>
+        <item>Romance</item>
+        <item>Thriller</item>
+        <item>Western</item>
+    </string-array>
+
+        <!-- Lista de años -->
+    <string-array name="year_list">
+        <item>Todos</item>
+        <item>2023</item>
+        <item>2022</item>
+        <item>2021</item>
+        <item>2020</item>
+        <item>2010 - 2019</item>
+        <item>2000 - 2009</item>
+        <item>1990 - 1999</item>
+        <item>1980 - 1989</item>
+        <item>1970 - 1979</item>
+        <item>Antes de 1970</item>
+    </string-array>
+</resources>

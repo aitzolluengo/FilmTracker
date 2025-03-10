@@ -81,7 +81,7 @@ public class EditMovieActivity extends AppCompatActivity {
 
         int year = Integer.parseInt(yearStr);
         float rating = Float.parseFloat(ratingStr);
-        Movie updatedMovie = new Movie(title, director, year, genre, rating);
+        Movie updatedMovie = new Movie(title, director, genre, year, rating);
         updatedMovie.setId(movieId);
 
         new Thread(() -> {

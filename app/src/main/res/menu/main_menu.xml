@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Opción de búsqueda -->
+    <item
+        android:id="@+id/nav_home"
+        android:title="Inicio"
+        android:icon="@drawable/ic_home"/>
+
+    <item
+        android:id="@+id/action_search"
+        android:title="@string/search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
+
+    <!-- Opción para ordenar por título -->
+    <item
+        android:id="@+id/action_sort_title"
+        android:title="@string/sort_by_title"
+        app:showAsAction="never" />
+
+    <!-- Opción para ordenar por año -->
+    <item
+        android:id="@+id/action_sort_year"
+        android:title="@string/sort_by_year"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/nav_add_movie"
+        android:title="Añadir Película"
+        android:icon="@drawable/ic_add"/>
+
+    <item
+        android:id="@+id/nav_settings"
+        android:title="Configuraciones"
+        android:icon="@drawable/ic_settings"/>
+
+</menu>

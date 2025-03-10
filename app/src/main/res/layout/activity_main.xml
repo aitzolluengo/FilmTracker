@@ -1,35 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@color/primary">
+    android:background="?attr/background">
 
+    <!-- Título de la aplicación -->
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:textColor="@color/text_primary"/>
+
+    <!-- Contenedor de filtros (Género + Año) -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Películas"
-        style="@style/TitleText"/>
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="center">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/secondary"
-        android:layout_marginBottom="10dp"/>
+        <!-- Filtro por género -->
+        <Spinner
+            android:id="@+id/spinnerGenre"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/genre_list"
+            android:background="@android:drawable/btn_dropdown"
+            android:padding="8dp"
+            android:layout_marginEnd="8dp"/>
 
+        <!-- Filtro por año -->
+        <Spinner
+            android:id="@+id/spinnerYear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/year_list"
+            android:background="@android:drawable/btn_dropdown"
+            android:padding="8dp"/>
+    </LinearLayout>
+
+    <!-- RecyclerView para la lista de películas -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingBottom="16dp"
-        android:background="@color/primary"/>
+        android:padding="8dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
+    <!-- Botón para añadir nueva película -->
     <Button
         android:id="@+id/btnAddMovie"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Añadir Película"
-        style="@style/PrimaryButton"/>
+        android:text="@string/add_movie"
+        android:backgroundTint="@color/accent"
+        android:textColor="@android:color/white"
+        android:padding="12dp"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"/>
 </LinearLayout>

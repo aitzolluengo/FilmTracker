@@ -1,3 +1,10 @@
 <resources>
+    <string name="search">Buscar</string>
+    <string name="nav_home">Inicio</string>
+    <string name="sort_by_title">Ordenar por título</string>
+    <string name="sort_by_year">Ordenar por año</string>
     <string name="app_name">FilmTracker</string>
+    <string name="add_movie">Añadir Película</string>
+    <string name="nav_settings">Configuraciones</string>
+
 </resources>

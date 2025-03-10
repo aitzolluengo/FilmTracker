@@ -4,7 +4,12 @@
     <color name="primary">#181818</color> <!-- Fondo oscuro -->
     <color name="secondary">#1c1c1c</color> <!-- Fondo de tarjetas -->
     <color name="accent">#00A8E1</color> <!-- Azul vibrante para destacar -->
-    <color name="text_primary">#FFFFFF</color> <!-- Texto principal en blanco -->
+    <color name="text_primary">#212121</color>
     <color name="text_secondary">#B0B0B0</color> <!-- Texto secundario en gris -->
     <color name="error">#D32F2F</color> <!-- Rojo para errores -->
+    <color name="white">#FFFFFF</color>
+    <color name="background">#F5F5F5</color> <!-- Color gris claro -->
+
+    <!-- Color oscuro para texto -->
+
 </resources>

@@ -24,11 +24,10 @@
 
     <!-- Estilo para botones de eliminación -->
     <style name="DangerButton" parent="Widget.MaterialComponents.Button">
-        <item name="android:backgroundTint">@color/error</item>
+        <item name="android:background">@drawable/rounded_button</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:padding">12dp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:cornerRadius">8dp</item>
         <item name="android:elevation">4dp</item>
     </style>
 
@@ -41,9 +40,15 @@
         <item name="android:paddingBottom">12dp</item>
     </style>
 
+    <style name="RoundedButton" parent="Widget.MaterialComponents.Button">
+        <item name="android:background">@drawable/rounded_button</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+
     <!-- Estilo para los campos de texto -->
-    <style name="EditTextStyle" parent="Widget.MaterialComponents.TextInputEditText">
-        <item name="android:background">@android:color/transparent</item>
+    <style name="EditTextStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+    <item name="android:background">@android:color/transparent</item>
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textSize">18sp</item>
         <item name="android:padding">10dp</item>
