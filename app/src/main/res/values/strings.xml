@@ -6,5 +6,8 @@
     <string name="app_name">FilmTracker</string>
     <string name="add_movie">Añadir Película</string>
     <string name="nav_settings">Configuraciones</string>
+    <string name="open">Abrir</string>
+    <string name="close">Cerrar</string>
+s
 
 </resources>

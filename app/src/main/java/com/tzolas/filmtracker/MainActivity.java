@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.view.View;
+
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.Toolbar;
 import com.google.android.material.navigation.NavigationView;
@@ -40,6 +42,10 @@ public class MainActivity extends AppCompatActivity {
     private String selectedGenre = "Todos";
     private String selectedYear = "Todos";
 
+    // DrawerLayout y NavigationView
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle toggle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         // Configuración del RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         // Inicialización de la base de datos
         movieDatabase = MovieDatabase.getInstance(this);
@@ -78,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-// Listener para el filtro por año
+        // Listener para el filtro por año
         spinnerYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -92,6 +99,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Configuración del NavigationView y DrawerLayout
+        drawerLayout = findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        // Configurar el Toolbar y el NavigationView
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     // Método para cargar películas desde la base de datos y mostrarlas en la lista
@@ -109,43 +125,7 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            loadMovies(); // Recargar películas cuando se vuelve desde MovieDetailActivity o AddMovieActivity
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        loadMovies(); // Recargar películas cuando se vuelve a la pantalla principal
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                filterMovies();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filterMovies();
-                return false;
-            }
-        });
-        return true;
-    }
-
+    // Filtro de películas por género y año
     private void filterMovies() {
         // Filtrado de películas basado en el género y año seleccionados
         new Thread(() -> {
@@ -180,9 +160,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true;
+        }
+
+        // Añadir funcionalidades para las opciones del menú
         if (item.getItemId() == R.id.action_sort_title) {
             sortMoviesByTitle();
             return true;
