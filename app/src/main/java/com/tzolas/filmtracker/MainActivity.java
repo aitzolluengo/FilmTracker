@@ -1,274 +1,103 @@
 package com.tzolas.filmtracker;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.AdapterView;
-import android.widget.Spinner;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
-
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.widget.Toolbar;
-import com.google.android.material.navigation.NavigationView;
-
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.google.android.material.navigation.NavigationView;
 import com.tzolas.filmtracker.adapters.MovieAdapter;
 import com.tzolas.filmtracker.database.MovieDatabase;
 import com.tzolas.filmtracker.entities.Movie;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import com.tzolas.filmtracker.utils.NotificationHelper;
 import java.util.List;
+import android.Manifest;
+import android.content.pm.PackageManager;
 
 public class MainActivity extends AppCompatActivity {
-
     private RecyclerView recyclerView;
-    private MovieAdapter movieAdapter;
-    private MovieDatabase movieDatabase;
-    private List<Movie> movieList = new ArrayList<>();
-
-    private Spinner spinnerGenre, spinnerYear;
-    private String selectedGenre = "Todos";
-    private String selectedYear = "Todos";
+    private MovieAdapter adapter;
+    private List<Movie> movieList;
+    private MovieDatabase database;
     private DrawerLayout drawerLayout;
-    private ActionBarDrawerToggle toggle;
+    private NavigationView navigationView;
+    private Button btnAddMovie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        aplicarModoOscuro();
         setContentView(R.layout.activity_main);
 
-        movieList = loadMoviesFromFile();
-
-        // Configuración del RecyclerView
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        // Configuración del Toolbar
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        // Configuración del DrawerLayout y NavigationView
+        // Configurar Navigation Drawer
         drawerLayout = findViewById(R.id.drawer_layout);
-        toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open, R.string.close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this::onNavigationItemSelected);
 
-        // Inicialización de la base de datos
-        movieDatabase = MovieDatabase.getInstance(this);
-        loadMovies();
+        // Inicializar la base de datos
+        database = MovieDatabase.getInstance(this);
+        movieList = database.movieDao().getAllMovies();
 
-        // Botón para añadir nuevas películas
-        Button btnAddMovie = findViewById(R.id.btnAddMovie);
-        btnAddMovie.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, AddMovieActivity.class);
-            startActivity(intent);
-        });
+        // Configurar RecyclerView
+        recyclerView = findViewById(R.id.recyclerViewMovies);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new MovieAdapter(movieList, this);
+        recyclerView.setAdapter(adapter);
 
-        // Configurar los Spinners de Filtro
-        spinnerGenre = findViewById(R.id.spinnerGenre);
-        spinnerYear = findViewById(R.id.spinnerYear);
+        // Configurar botón de añadir película
+        btnAddMovie = findViewById(R.id.btnAddMovie);
+        btnAddMovie.setOnClickListener(v -> openAddMovieActivity());
 
-        spinnerGenre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedGenre = parent.getItemAtPosition(position).toString();
-                filterMovies();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-        spinnerYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedYear = parent.getItemAtPosition(position).toString();
-                filterMovies();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-        // Listener del NavigationView
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(item -> {
-            int id = item.getItemId();
-
-            if (id == R.id.nav_home) {
-                Toast.makeText(this, "Inicio seleccionado", Toast.LENGTH_SHORT).show();
-            } else if (id == R.id.nav_add_movie) {
-                Intent intent = new Intent(MainActivity.this, AddMovieActivity.class);
-                startActivity(intent);
-            } else if (id == R.id.nav_settings) {
-                Toast.makeText(this, "Configuraciones seleccionadas", Toast.LENGTH_SHORT).show();
-            }
-
-            drawerLayout.closeDrawers();
-            return true;
-        });
+        // Verificar permisos de notificaciones
+        checkNotificationPermission();
     }
 
-    private void loadMovies() {
-        new Thread(() -> {
-            movieList = movieDatabase.movieDao().getAllMovies();
-            runOnUiThread(() -> {
-                if (movieAdapter == null) {
-                    movieAdapter = new MovieAdapter(movieList, MainActivity.this);
-                    recyclerView.setAdapter(movieAdapter);
-                } else {
-                    movieAdapter.updateMovies(movieList);
-                }
-            });
-        }).start();
+    private void aplicarModoOscuro() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isDarkMode = prefs.getBoolean("dark_mode", false);
+        AppCompatDelegate.setDefaultNightMode(isDarkMode ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
+    private void openAddMovieActivity() {
+        Intent intent = new Intent(this, AddMovieActivity.class);
+        startActivity(intent);
+    }
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView) searchItem.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                filterMovies();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                filterMovies();
-                return false;
-            }
-        });
+    private boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_home:
+                Toast.makeText(this, "Inicio", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+            case R.id.nav_add_movie:
+                openAddMovieActivity();
+                break;
+            case R.id.nav_exit:
+                finishAffinity();
+                break;
+        }
+        drawerLayout.closeDrawers();
         return true;
     }
 
-    private void filterMovies() {
-        new Thread(() -> {
-            List<Movie> filteredMovies = new ArrayList<>();
-            for (Movie movie : movieList) {
-                boolean matchesGenre = selectedGenre.equals("Todos") || movie.getGenre().toLowerCase().contains(selectedGenre.toLowerCase());
-                boolean matchesYear = checkYearFilter(movie.getYear());
-                if (matchesGenre && matchesYear) {
-                    filteredMovies.add(movie);
-                }
-            }
-            runOnUiThread(() -> movieAdapter.updateMovies(filteredMovies));
-        }).start();
-    }
-
-    private boolean checkYearFilter(int movieYear) {
-        switch (selectedYear) {
-            case "2023": return movieYear == 2023;
-            case "2022": return movieYear == 2022;
-            case "2021": return movieYear == 2021;
-            case "2020": return movieYear == 2020;
-            case "2010 - 2019": return movieYear >= 2010 && movieYear <= 2019;
-            case "2000 - 2009": return movieYear >= 2000 && movieYear <= 2009;
-            case "1990 - 1999": return movieYear >= 1990 && movieYear <= 1999;
-            case "1980 - 1989": return movieYear >= 1980 && movieYear <= 1989;
-            case "1970 - 1979": return movieYear >= 1970 && movieYear <= 1979;
-            case "Antes de 1970": return movieYear < 1970;
-            default: return true;
+    private void checkNotificationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 1);
         }
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_sort_title) {
-            sortMoviesByTitle();
-            return true;
-        } else if (item.getItemId() == R.id.action_sort_year) {
-            sortMoviesByYear();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void sortMoviesByTitle() {
-        Collections.sort(movieList, Comparator.comparing(Movie::getTitle));
-        movieAdapter.updateMovies(movieList);
-    }
-
-    private void sortMoviesByYear() {
-        Collections.sort(movieList, Comparator.comparingInt(Movie::getYear));
-        movieAdapter.updateMovies(movieList);
-    }
-    public void saveMoviesToFile(List<Movie> movieList) {
-        try {
-            FileOutputStream fos = openFileOutput("movies_list.txt", MODE_PRIVATE);
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fos));
-
-            // Guardar los datos de las películas (título, director, año, etc.)
-            for (Movie movie : movieList) {
-                String movieData = movie.getTitle() + "," + movie.getDirector() + "," + movie.getGenre() + "," + movie.getYear() + "," + movie.getRating();
-                writer.write(movieData);
-                writer.newLine();
-            }
-
-            writer.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public List<Movie> loadMoviesFromFile() {
-        List<Movie> movies = new ArrayList<>();
-        try {
-            FileInputStream fis = openFileInput("movies_list.txt");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                String[] movieData = line.split(",");
-                String title = movieData[0];
-                String director = movieData[1];
-                String genre = movieData[2];
-                int year = Integer.parseInt(movieData[2]);
-                float rating = Float.parseFloat(movieData[3]);
-
-                Movie movie = new Movie(title, director,genre,year,rating);
-                movies.add(movie);
-            }
-
-            reader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return movies;
-    }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        saveMoviesToFile(movieList); // Guarda las películas cuando la aplicación se detiene
-    }
-
-
-
-
 }

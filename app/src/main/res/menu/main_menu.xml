@@ -36,5 +36,10 @@
         android:id="@+id/nav_settings"
         android:title="Configuraciones"
         android:icon="@drawable/ic_settings"/>
+    <item
+        android:id="@+id/nav_exit"
+        android:title="Salir"
+        app:showAsAction="never"/>
+
 
 </menu>

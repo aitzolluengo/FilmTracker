@@ -30,6 +30,7 @@ android {
 
 dependencies {
     implementation "androidx.room:room-runtime:2.5.2"
+    implementation libs.preference
     annotationProcessor "androidx.room:room-compiler:2.5.2"
     implementation 'com.google.android.material:material:1.6.0'
     implementation libs.appcompat

@@ -26,6 +26,7 @@
             android:orientation="horizontal"
             android:padding="8dp">
 
+
             <Spinner
                 android:id="@+id/spinnerGenre"
                 android:layout_width="0dp"
@@ -45,6 +46,12 @@
                 android:background="@android:drawable/btn_dropdown"
                 android:padding="8dp" />
         </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewMovies"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -73,4 +80,5 @@
         android:layout_gravity="start"
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/main_menu" />
+    
 </androidx.drawerlayout.widget.DrawerLayout>

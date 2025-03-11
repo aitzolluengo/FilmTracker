@@ -21,6 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SettingsActivity"/>
 
         <!-- Agregamos la pantalla para añadir películas -->
         <activity android:name=".AddMovieActivity"
