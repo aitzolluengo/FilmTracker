@@ -40,6 +40,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         aplicarModoOscuro();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isDarkMode = prefs.getBoolean("dark_mode", false);
+        if (isDarkMode) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
+
         setContentView(R.layout.activity_main);
 
         // Configurar Navigation Drawer

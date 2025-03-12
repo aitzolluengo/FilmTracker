@@ -57,9 +57,9 @@
 
     <Button
         android:id="@+id/btnSaveMovie"
+        style="@style/PrimaryButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Guardar Película"
-        style="@style/PrimaryButton"
-        android:layout_marginTop="20dp"/>
+        android:layout_marginTop="20dp"
+        android:text="Guardar Película" />
 </LinearLayout>
