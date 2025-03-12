@@ -1,5 +1,6 @@
 package com.tzolas.filmtracker;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -85,23 +86,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_home:
-                Toast.makeText(this, "Inicio", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.nav_settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                break;
-            case R.id.nav_add_movie:
-                openAddMovieActivity();
-                break;
-            case R.id.nav_exit:
-                finishAffinity();
-                break;
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            Toast.makeText(this, "Inicio", Toast.LENGTH_SHORT).show();
+        } else if (id == R.id.nav_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+        } else if (id == R.id.nav_add_movie) {
+            openAddMovieActivity();
+        } else if (id == R.id.nav_exit) {
+            finishAffinity();
         }
+
         drawerLayout.closeDrawers();
         return true;
     }
+
 
     private void checkNotificationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
